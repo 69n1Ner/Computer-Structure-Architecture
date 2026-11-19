@@ -1,0 +1,41 @@
+
+limit: 1000 
+memory_size: 0x6F0
+memory_mapped_io:
+  0x80: ['12345678901234567890123',0x0a]
+  0x84: []
+reports:
+  - name: Hello-user-cstr
+    slice: all #[head,300] #all
+    view: |
+     pc:{pc:hex}[{pc}]: AB:[{A:hex} {B:hex}] T={T:hex} S={S:hex} R={R:hex} {instruction:next}	{pc:label}
+    #  mem {memory:5:15}
+  # - name: Trailing-zeros-tail
+  #   slice: [tail,100] #all
+  #   view: |
+  #    pc:{pc:hex}[{pc}]: A:[{A:dec}] {T:hex} {S:hex} {R:hex} {instruction:next}	{pc:label}
+  
+  - name: mem
+    slice: [tail,6] #all
+    view: |
+
+     pc:[{pc:hex}] {A:hex} [{T:hex} {R:hex}] {stack:hex}
+  - name: mem-table
+    slice: [head,1]
+    view: | 
+
+      {memory:table}
+      {memory:0x00:0x25}
+  - name: mem-dump
+    slice: last
+    view: |
+      {memory:0x00:0x25}
+
+  - name: Check results
+    slice: last
+    view: |
+      numio[0x80]: {io:0x80:dec}
+      numio[0x84]: {io:0x84:dec}
+      symio[0x80]: {io:0x80:sym}
+      symio[0x84]: {io:0x84:sym}
+      {memory:0:31}

@@ -1,0 +1,24 @@
+limit: 1000
+memory_size: 0x90
+memory_mapped_io:
+  0x80: [16]
+  0x84: []
+reports:
+  - name: Trailing-zeros
+    slice: all
+    view: |
+      {pc}: {Acc:hex}	{instruction:next}	{pc:label}
+  - name: Result
+    slice: last
+    view: |
+      numio[0x80]: {io:0x80:dec}
+      numio[0x84]: {io:0x84:dec}
+    assert: |
+      numio[0x80]: [] >>> []
+      numio[0x84]: [] >>> [4]
+  
+  # - name: mem
+  #   slice: last
+  #   view: |
+  #     {memory:table}
+  #     memory: {memory:0x0:0xb}
